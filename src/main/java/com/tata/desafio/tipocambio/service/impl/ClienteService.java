@@ -18,7 +18,7 @@ public class ClienteService implements IClienteService {
     @Override
     public Cliente saveClient(Cliente client) {
         Cliente cliente = iClienteRespository.save(client);
-        cliente.setContrasena("");
+        cliente.setContrasena(null);
         return cliente;
     }
 
@@ -34,8 +34,14 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Cliente getClient(Long id) {
-        Cliente cliente =Optional.ofNullable(iClienteRespository.findById(id).get()).orElseThrow(()-> new RuntimeException());
-        cliente.setContrasena("");
+        Cliente cliente =Optional.ofNullable(iClienteRespository.findById(id).get()).orElseThrow(()-> new NullPointerException());
+        cliente.setContrasena(null);
         return  cliente;
+    }
+
+    @Override
+    public Cliente ValidateToken(String token) {
+        Long idCliente = JWTUtil.Decode(token);
+        return Optional.ofNullable(iClienteRespository.findById(idCliente).get()).orElseThrow(()-> new NullPointerException("El Token no tiene datos validos"));
     }
 }

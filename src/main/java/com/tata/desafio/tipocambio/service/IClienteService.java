@@ -8,4 +8,8 @@ public interface IClienteService {
     Cliente saveClient(Cliente client);
     Token getClient(Cliente client);
     Cliente getClient(Long id);
+
+    Cliente ValidateToken(String token);
+
+
 }

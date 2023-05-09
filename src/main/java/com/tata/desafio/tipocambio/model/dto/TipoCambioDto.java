@@ -12,9 +12,7 @@ import java.io.Serializable;
 
 public class TipoCambioDto implements Serializable {
     private static final long serialVersionUID = 1L;
-
-
-    private Long monedaOrigen;
-    private Long monedaDestino;
+    private Long idMonedaOrigen;
+    private Long idMonedaDestino;
     private double valorCambio;
 }

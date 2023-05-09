@@ -21,8 +21,8 @@ public class TipoCambioService implements ITipoCambioService {
     IMonedaService iMonedaService;
     @Override
     public TipoCambio saveTipoCambio(TipoCambioDto tipoCambioDto) {
-        Moneda monedaOrigen =iMonedaService.getMoneda(tipoCambioDto.getMonedaOrigen());
-        Moneda monedaDestino =iMonedaService.getMoneda(tipoCambioDto.getMonedaDestino());
+        Moneda monedaOrigen =iMonedaService.getMoneda(tipoCambioDto.getIdMonedaOrigen());
+        Moneda monedaDestino =iMonedaService.getMoneda(tipoCambioDto.getIdMonedaDestino());
         TipoCambio tipoCambio = new TipoCambio();
         tipoCambio.setValorCambio(tipoCambioDto.getValorCambio());
         tipoCambio.setMonedaOrigen(monedaOrigen);
@@ -38,6 +38,10 @@ public class TipoCambioService implements ITipoCambioService {
     @Override
     public TipoCambio UpdateTipoCambio(Long id, TipoCambioUpd tipoCambioUpd) {
         TipoCambio tipoCambio = Optional.ofNullable(iTipoCambioRepository.findById(id).get()).orElseThrow(()->new RuntimeException());
+        Moneda monedaOrigen =iMonedaService.getMoneda(tipoCambioUpd.getIdMonedaOrigen());
+        Moneda monedaDestino =iMonedaService.getMoneda(tipoCambioUpd.getIdMonedaDestino());
+        tipoCambio.setMonedaOrigen(monedaOrigen);
+        tipoCambio.setMonedaDestino(monedaDestino);
         tipoCambio.setValorCambio(tipoCambioUpd.getValorCambio());
         return iTipoCambioRepository.save(tipoCambio);
     }

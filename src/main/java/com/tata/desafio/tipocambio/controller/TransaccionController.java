@@ -18,6 +18,17 @@ public class TransaccionController {
     private static final Logger logger = LoggerFactory.getLogger(MonedaController.class);
     @Autowired
     private ITransaccionService iTransaccionService;
+    @GetMapping("")
+    public ResponseEntity getTransaccion(@RequestHeader("Authorization") String token){
+        try {
+
+            return new ResponseEntity(iTransaccionService.GetTransaccionCliente(token), HttpStatus.CREATED);
+        }catch (Exception e){
+            logger.error("ERROR:  " + e.getMessage());
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
     @PostMapping()
     public ResponseEntity saveTransaccion(@RequestHeader("Authorization") String token,@RequestBody TransaccionDto entity){
         try {

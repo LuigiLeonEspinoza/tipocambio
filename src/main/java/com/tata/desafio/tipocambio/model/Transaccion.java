@@ -23,6 +23,7 @@ public class Transaccion implements Serializable {
     private TipoCambio tipoCambio;
     private double monto;
     private double montoCambio;
+    private String fecha;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_CLIENT")
     private Cliente cliente;

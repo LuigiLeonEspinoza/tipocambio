@@ -8,9 +8,13 @@ import com.tata.desafio.tipocambio.repositories.ITransaccionRepository;
 import com.tata.desafio.tipocambio.service.IClienteService;
 import com.tata.desafio.tipocambio.service.ITipoCambioService;
 import com.tata.desafio.tipocambio.service.ITransaccionService;
-import com.tata.desafio.tipocambio.service.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.xml.crypto.Data;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TransaccionService implements ITransaccionService {
@@ -22,8 +26,8 @@ public class TransaccionService implements ITransaccionService {
     ITipoCambioService iTipoCambioService;
     @Override
     public Transaccion saveTransaccion(String token,TransaccionDto transaccionDto) {
-        Long idCliente = JWTUtil.Decode(token);
-        Cliente cliente = iClienteService.getClient(idCliente);
+        //Long idCliente = JWTUtil.Decode(token);
+        Cliente cliente = iClienteService.ValidateToken(token);
         TipoCambio tipoCambio = iTipoCambioService.getTipoCambio(transaccionDto.getTipoCambio());
         Transaccion transaccion = new Transaccion();
         transaccion.setCliente(cliente);
@@ -31,7 +35,20 @@ public class TransaccionService implements ITransaccionService {
         transaccion.setMonto(transaccionDto.getMonto());
         double montocambio=transaccionDto.getMonto()*tipoCambio.getValorCambio();
         transaccion.setMontoCambio(montocambio);
-        return iTransaccionRepository.save(transaccion);
+        transaccion.setFecha(new Date().toString());
+        Transaccion transaccionRspt = iTransaccionRepository.save(transaccion);
+        transaccionRspt.getCliente().setContrasena(null);
+        return transaccionRspt;
+
+    }
+    @Override
+    public List<Transaccion> GetTransaccionCliente(String token) {
+        Cliente cliente = iClienteService.ValidateToken(token);
+        List<Transaccion> transaccionList = iTransaccionRepository.findTransaccionByCliente_Id(cliente.getId());
+        return transaccionList.stream().map((element)->{
+           element.getCliente().setContrasena(null);
+           return element;
+        }).collect(Collectors.toList());
 
     }
 

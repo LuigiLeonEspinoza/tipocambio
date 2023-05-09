@@ -20,5 +20,6 @@ public class Moneda implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String Name;
+    private String paisOrigen;
 
 }
